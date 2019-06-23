@@ -2,55 +2,61 @@
 
 class LinkedListNode(object):
     def __init__(self, value, next_node=None, prev_node=None):
-        self.my_value = value
-        self.my_next_node = next_node
-        self.my_previous_node = prev_node
+        self.value = value
+        self.next_node = next_node
+        self.previous_node = prev_node
 
-    def get_value(self):
-        return self.my_value
+    @property
+    def value(self):
+        return self._value
 
-    def set_value(self, value):
-        self.my_value = value
+    @value.setter
+    def value(self, value):
+        self._value = value
 
-    def get_next_node(self):
-        return self.my_next_node
+    @property
+    def next_node(self):
+        return self._next_node
+    
+    @next_node.setter
+    def next_node(self, node):
+        self._next_node = node
 
-    def get_previous_node(self):
-        return self.my_previous_node
+    @property
+    def previous_node(self):
+        return self._previous_node
 
-    def set_next_node(self, node):
-        self.my_next_node = node
-
-    def set_previous_node(self, node):
-        self.my_previous_node = node
-
+    @previous_node.setter
+    def previous_node(self, node):
+        self._previous_node = node
+    
     def __repr__(self):
-        return "LinkedListNode value: %s, me: %s prev: %s next: %s" % (str(self.my_value), 
-            id(self), id(self.get_previous_node()), id(self.get_next_node()))
+        return "LinkedListNode value: %s, me: %s prev: %s next: %s" % (str(self.value), 
+            id(self), id(self.previous_node), id(self.next_node))
 
 
 class LinkedList(object):
     def __init__(self):
-        self.my_head = None
-        self.my_tail = None
+        self.head = None
+        self.tail = None
 
     def insert(self, value):
-        last_node = self.my_tail
+        last_node = self.tail
         previous_node = None
         new_node = LinkedListNode(value)
 
         if last_node is None:
             # new list, simply point head to node
-            self.my_head = new_node
-            self.my_tail = new_node
+            self.head = new_node
+            self.tail = new_node
         else:
-            last_node = self.my_tail
+            last_node = self.tail
 
             # previous node is the last node of the list
             # current is None
-            last_node.set_next_node(new_node)
-            new_node.set_previous_node(last_node)
-            self.my_tail = new_node
+            last_node.next_node = new_node
+            new_node.previous_node = last_node
+            self.tail = new_node
         return new_node
 
     def remove_first(self):
@@ -59,16 +65,16 @@ class LinkedList(object):
 
         Returns the removed node.
         """
-        first_node = self.my_head
+        first_node = self.head
         if first_node is None:
             return None
 
-        next_node = first_node.get_next_node()
-        first_node.set_next_node(None)
+        next_node = first_node.next_node
+        first_node.next_node = None
 
         if next_node is not None:
-            next_node.set_previous_node(None)
-        self.my_head = next_node
+            next_node.previous_node = None
+        self.head = next_node
         return first_node
 
 
@@ -78,58 +84,58 @@ class LinkedList(object):
 
         Returns the removed node.
         """
-        last_node = self.my_tail
+        last_node = self.tail
         if last_node is None:
             return None
 
-        previous_node = last_node.get_previous_node()
-        last_node.set_previous_node(None)
+        previous_node = last_node.previous_node
+        last_node.previous_node = None
 
         if previous_node is not None:
-            previous_node.set_next_node(None)
-        self.my_tail = previous_node
+            previous_node.next_node = None
+        self.tail = previous_node
         return last_node
 
     def remove(self, value):
         """Remove the object with the specified value"""
         previous_node = None
-        current_node = self.my_head
+        current_node = self.head
         while current_node is not None:
-            if current_node.get_value() == value:
-                next_node = current_node.get_next_node()
+            if current_node.value == value:
+                next_node = current_node.next_node
 
                 if previous_node is None:
-                    self.my_head = next_node
+                    self.head = next_node
                 else:
-                    previous_node.set_next_node(next_node)
+                    previous_node.next_node = next_node
 
                 if next_node is None:
-                    self.my_tail = previous_node
+                    self.tail = previous_node
                 else:
-                    next_node.set_previous_node(previous_node)
+                    next_node.previous_node = previous_node
 
                 break
             else:
                 previous_node = current_node
-                current_node = current_node.get_next_node()
+                current_node = current_node.next_node
 
     def index_of(self, value):
-        current_node = self.my_head
+        current_node = self.head
         idx = 0
         while current_node is not None:
-            if current_node.get_value() == value:
+            if current_node.value == value:
                 break
             else:
-                current_node = current_node.get_next_node()
+                current_node = current_node.next_node
                 idx += 1
 
         return idx
     
     def traverse(self):
-        current_node = self.my_head
+        current_node = self.head
         while current_node is not None:
             print(current_node)
-            current_node = current_node.get_next_node()
+            current_node = current_node.next_node
 
 
 if __name__ == "__main__":
