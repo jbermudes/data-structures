@@ -35,25 +35,60 @@ class LinkedList(object):
         self.my_tail = None
 
     def insert(self, value):
-        current_node = self.my_head
+        last_node = self.my_tail
         previous_node = None
         new_node = LinkedListNode(value)
 
-        if current_node is None:
+        if last_node is None:
             # new list, simply point head to node
             self.my_head = new_node
             self.my_tail = new_node
         else:
-            # traverse the list until the end
-            while current_node is not None:
-                previous_node = current_node
-                current_node = current_node.get_next_node()
+            last_node = self.my_tail
 
             # previous node is the last node of the list
             # current is None
-            previous_node.set_next_node(new_node)
-            new_node.set_previous_node(previous_node)
+            last_node.set_next_node(new_node)
+            new_node.set_previous_node(last_node)
             self.my_tail = new_node
+        return new_node
+
+    def remove_first(self):
+        """
+        Removes the first node in the list.
+
+        Returns the removed node.
+        """
+        first_node = self.my_head
+        if first_node is None:
+            return None
+
+        next_node = first_node.get_next_node()
+        first_node.set_next_node(None)
+
+        if next_node is not None:
+            next_node.set_previous_node(None)
+        self.my_head = next_node
+        return first_node
+
+
+    def remove_last(self):
+        """
+        Removes the last node in the list.
+
+        Returns the removed node.
+        """
+        last_node = self.my_tail
+        if last_node is None:
+            return None
+
+        previous_node = last_node.get_previous_node()
+        last_node.set_previous_node(None)
+
+        if previous_node is not None:
+            previous_node.set_next_node(None)
+        self.my_tail = previous_node
+        return last_node
 
     def remove(self, value):
         """Remove the object with the specified value"""
@@ -99,12 +134,20 @@ class LinkedList(object):
 
 if __name__ == "__main__":
     li = LinkedList()
+    print("inserting 1,3,4,5")
     li.insert(1)
     li.insert(3)
     li.insert(4)
     li.insert(5)
     li.traverse()
+    print("removing 4,3")
     li.remove(4)
     li.remove(3)
+    print("inserting 2")
     li.insert(2)
+    print("inserting 7")
+    li.insert(7)
+    print("removing last")
+    li.remove_last()
+    li.remove_first()
     li.traverse()
